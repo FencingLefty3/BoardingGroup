@@ -1,0 +1,63 @@
+* {
+    --primaryColor: #c2c2c2; 
+    --secondaryColor: #3e4a60;
+    --tertiaryColor: #5d5484; 
+
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+header {
+    background: var(--secondaryColor);
+    color: var(--primaryColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    box-sizing: border-box; 
+    width: 20%;            /* Safer than 100svw as it accounts for scrollbars */
+    padding: 0 20px;   
+    margin: 0;
+    padding: 10px;
+    height: 100dvh;
+    max-height: 100%;
+}
+header img {
+    width: 3rem;
+    height: 3rem;
+
+    margin: 0;
+}
+header h2 {
+    font-size: 3rem;
+    margin: 0;
+}
+p {
+    opacity: .5;
+    font-size: .8rem;
+    margin-bottom: 0;
+}
+hr {
+    opacity: .5;
+    margin-top: 0;
+    width: 100%;
+}
+a {
+    color: var(--primaryColor);
+}
+a:hover {
+    color: var(--tertiaryColor);
+}
+body {
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    margin: 0;
+
+    width: 100svw;
+    height: 100svh;
+}
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    width: 90%;
+}

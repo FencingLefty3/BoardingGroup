@@ -135,4 +135,5 @@ button[type="submit"]:hover {
 p, h2 {
     width: 80%;
     margin-bottom: 0;
+    margin-top: 0;
 }

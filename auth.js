@@ -23,7 +23,7 @@ $('login').addEventListener('submit', async e => {
         password: $('loginPassword').value
     })
     if (error) msg.textContent = error.message
-    else location.replace('app.html')
+    else location.replace('account.html')
 
 
 })
@@ -38,12 +38,12 @@ $('login').addEventListener('submit', async e => {
         password: $('SignUpPassword').value,
         options: {
             data: { username: $('SignUpUsername').value.trim() },
-            emailRedirectTo: new URL('app.html', location.href).href
+            emailRedirectTo: new URL('account.html', location.href).href
 
         }
     })
     if (error) return (msg.textContent = error.message)
-    if (data.session) location.replace('app.html')
+    if (data.session) location.replace('account.html')
     
     else msg.textContent = 'Check Inbox for Email confirmation.'
 
