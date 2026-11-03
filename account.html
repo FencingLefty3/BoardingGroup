@@ -18,7 +18,7 @@
             <p>Trips</p>
             <hr>
             <a>Trips</a>
-            <a>Create Trip</a>
+            <a href="#" id="createTrip">Create Trip</a>
             <br>
             <p>Account</p>
             <hr>
@@ -32,6 +32,36 @@
             <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
         </div>
     </main>
+    <dialog id="CreateTripDialog">
+        <form id="createTripForm">
+            <h2>Create Trip</h2>
+            <p style="width: 80%;">Title:</p>
+            <input type="text" id="NewTripTitle" required>
+
+            <p style="width: 80%;">Invite Emails (optional):</p>
+            <div id="inviteBox" class="chipBox">
+                <div class="chips"></div>
+                <input class="emailInput" type="email" id="inviteInput" autocomplete="off">
+            </div>
+            <p id="inviteHint" class="hint"></p>
+
+            <div class="dateRow">
+            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                <p style="width: 90%;">StartDate:</p>
+                <input type="date" id="NewStartDate" required style="width: 90%;">
+            </div>
+            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                <p style="width: 90%;">EndDate:</p>
+                <input type="date" id="NewEndDate" required style="width: 90%;">
+            </div></div>
+
+            <div style="display: flex;flex-direction: row;width: 80%;justify-content: center;gap: 10%;margin: 5% 0;">
+            <button type="button" id="exit">Cancel</button>
+            <button type="submit">Submit</button>
+        </div>
+        <p id="signUpMsg"></p>
+        </form>
+    </dialog>
 
 </body>
 </html>

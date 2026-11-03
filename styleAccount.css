@@ -127,3 +127,155 @@ nav {
     align-items: center;
     justify-content: center;
 }
+@media (min-width: 768px) {
+dialog[open] {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 40svw;
+    height: 80svh;
+}}
+@media (max-width: 768px) {
+dialog[open] {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 90svw;
+    height: 80svh;
+}}
+form {
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.dateRow {
+    display: flex; 
+    flex-direction: row;
+    gap: 4%;
+    width: 80%;
+    box-sizing: content-box;
+    margin: 0;
+    justify-content: space-between;
+}
+input {
+  width:80%;
+  height: .8rem;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-sizing: content-box;
+  border: #000 2px inset;
+  box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+}
+.chipBox {
+  width:80%;
+  height: .8rem;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  background: #fff;
+  border: #000 2px inset;
+  box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.chips {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: fit-content;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    background: var(--tertiaryColor);
+    color: var(--primaryColor);
+    padding: 0.25rem 0.4rem;
+    border-radius: 8px;
+}
+input.emailInput {
+    background: none;
+    width: 100%;
+    height: 100%;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+}
+button {
+  width:40%;
+  padding:10px 12px;
+  color: var(--secondaryColor);
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-shadow: #000 1.95px 1.95px 2.6px;
+  font-size:1rem;
+}
+button[type="submit"] {
+  width:40%;
+  padding:10px 12px;
+  color: var(--primaryColor);
+  background: var(--tertiaryColor);
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-shadow: #000 1.95px 1.95px 2.6px;
+  font-size:1rem;
+}
+button:hover {
+  width:40%;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+}
+button[type="submit"]:hover {
+  width:40%;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  box-shadow: #3c3654 3px 3px 6px 0px inset, #5b537a71 -3px -3px 6px 1px inset;
+  font-size:1rem;
+}
+button.chipRemove {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1em;
+    height: 1.1em;
+    margin-left: 0.35em;
+    line-height: 1;
+    cursor: pointer;
+}
