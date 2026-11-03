@@ -6,33 +6,36 @@
 
     <link rel="stylesheet" href="styleAuth.css">
     <link rel="icon" type="image/png" href="/faviconSQ.png">
+    <script type="module" src="auth.js"></script>
 </head>
 <body>
     <form id="login" style="display: flex;">
         <h2>Login</h2>
         <p>Email:</p>
-        <input type="email">
+        <input id="loginEmail" type="email" required autocomplete="email">
 
         <p>Password:</p>
-        <input type="password">
+        <input id="loginPassword" type="password" required autocomplete="current-password">
         <div style="display: flex;flex-direction: row;width: 80%;justify-content: center;gap: 10%;margin: 5% 0;">
-            <button>Sign Up</button>
-            <button>Login</button>
+            <button type="button" id="toSignUp">New? <br> Sign Up</button>
+            <button type="submit">Login</button>
         </div>
+        <p id="loginMsg"></p>
     </form>
     <form id="signup" style="display: none;">
         <h2>Sign Up</h2>
         <p>Username:</p>
-        <input type="text">
+        <input id="SignUpUsername" type="text" required minlength="3" maxlength="24" autocomplete="username">
 
         <p>Email:</p>
-        <input type="email">
+        <input id="SignUpEmail" type="email" required autocomplete="email">
 
         <p>Password:</p>
-        <input type="password">
+        <input id="SignUpPassword" type="password" required minlength="6" maxlength="24" autocomplete="new-password">
         <div style="display: flex;flex-direction: row;width: 80%;justify-content: center;gap: 10%;margin: 5% 0;">
-            <button>Login</button>
-            <button>Sign Up</button>
+            <button type="button" id="toLogin">Back? <br> Login</button>
+            <button type="submit" style="background: #5d5484;">Sign Up</button>
         </div>
+        <p id="signUpMsg"></p>
     </form>
 </body>

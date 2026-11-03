@@ -105,12 +105,31 @@ button {
   box-shadow: #000 1.95px 1.95px 2.6px;
   font-size:1rem;
 }
+button[type="submit"] {
+  width:40%;
+  padding:10px 12px;
+  color: var(--primaryColor);
+  background: var(--tertiaryColor);
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-shadow: #000 1.95px 1.95px 2.6px;
+  font-size:1rem;
+}
 button:hover {
   width:40%;
   padding:10px 12px;
   margin-top:6px;
   border-radius:8px;
   box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+}
+button[type="submit"]:hover {
+  width:40%;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  box-shadow: #3c3654 3px 3px 6px 0px inset, #5b537a71 -3px -3px 6px 1px inset;
   font-size:1rem;
 }
 p, h2 {
