@@ -2,8 +2,12 @@
     --primaryColor: #c2c2c2; 
     --secondaryColor: #3e4a60;
     --tertiaryColor: #5d5484; 
-
+}
+p, a {
     font-family: "Lucida Console", "Courier New", monospace;
+}
+h1, h2, h3, h4 {
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 header {
     background: var(--secondaryColor);

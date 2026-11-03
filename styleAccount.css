@@ -2,9 +2,14 @@
     --primaryColor: #c2c2c2; 
     --secondaryColor: #3e4a60;
     --tertiaryColor: #5d5484; 
-
+}
+p, a {
     font-family: "Lucida Console", "Courier New", monospace;
 }
+h1, h2, h3, h4 {
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
+}
+
 header {
     background: var(--secondaryColor);
     color: var(--primaryColor);
@@ -43,9 +48,23 @@ hr {
 }
 a {
     color: var(--primaryColor);
+    position: relative;
+    display: inline-block;
+    margin-bottom: 3px;
 }
-a:hover {
-    color: var(--tertiaryColor);
+a:hover::after {
+    background-color: var(--tertiaryColor);
+    opacity: 1;
+}
+a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 25px; 
+  height: 3px; 
+  background-color: var(--primaryColor);
+  opacity: .5;
 }
 body {
     background: var(--primaryColor);
@@ -60,4 +79,6 @@ nav {
     flex-direction: column;
     gap: .2rem;
     width: 90%;
+    height: fit-content;
+    
 }

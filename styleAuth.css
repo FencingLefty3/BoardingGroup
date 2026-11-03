@@ -2,8 +2,12 @@
     --primaryColor: #c2c2c2; 
     --secondaryColor: #3e4a60;
     --tertiaryColor: #5d5484; 
-
+}
+p, a {
     font-family: "Lucida Console", "Courier New", monospace;
+}
+h1, h2, h3, h4 {
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 header {
     background: var(--secondaryColor);
@@ -27,9 +31,8 @@ header img {
 
     margin: 0;
 }
-header h2 {
-    font-size: 3rem;
-    margin: 0;
+h2 {
+    margin: 2rem 0;
 }
 a {
     color: var(--primaryColor);
@@ -132,8 +135,8 @@ button[type="submit"]:hover {
   box-shadow: #3c3654 3px 3px 6px 0px inset, #5b537a71 -3px -3px 6px 1px inset;
   font-size:1rem;
 }
-p, h2 {
+p {
     width: 80%;
     margin-bottom: 0;
-    margin-top: 0;
+    margin-top: 1rem;
 }
