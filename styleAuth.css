@@ -40,6 +40,7 @@ a:hover {
 html {
     background: #f6f6f6;
 }
+@media (min-width: 768px) {
 body {
     position: fixed;
     top: 50%;
@@ -57,7 +58,27 @@ body {
     flex-direction: column;
     width: 40svw;
     height: 80svh;
-}
+}}
+@media (max-width: 768px) {
+body {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 90svw;
+    height: 80svh;
+}}
+
 form {
     width:80%;
     align-items: center;
@@ -70,7 +91,7 @@ input {
   padding:10px 12px;
   margin-top:6px;
   border-radius:8px;
-    
+  outline: none;
   box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
   font-size:1rem;
 }
