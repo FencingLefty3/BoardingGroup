@@ -6,7 +6,7 @@
 p, a {
     font-family: "Lucida Console", "Courier New", monospace;
 }
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
     font-family: 'Lato', Helvetica, Arial, sans-serif;
 }
 
@@ -50,11 +50,14 @@ a {
     color: var(--primaryColor);
     position: relative;
     display: inline-block;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
+    text-decoration: none;
+    width: fit-content;
 }
 a:hover::after {
     background-color: var(--tertiaryColor);
     opacity: 1;
+    width: 100%;
 }
 a::after {
   content: '';
@@ -71,8 +74,26 @@ body {
     color: var(--secondaryColor);
     margin: 0;
 
+    display: flex;
+    flex-direction: row;
     width: 100svw;
     height: 100svh;
+}
+main {
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+
+    box-sizing: border-box; 
+    width: 80%;            /* Safer than 100svw as it accounts for scrollbars */
+    padding: 0 20px;   
+    margin: 0;
+    padding: 10px;
+    height: 100dvh;
+    max-height: 100%;
 }
 nav {
     display: flex;
@@ -81,4 +102,28 @@ nav {
     width: 90%;
     height: fit-content;
     
+    
+}
+.box {
+    background: var(--secondaryColor);
+    color: var(--primaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 80%;
+}
+.circle {
+    aspect-ratio: 1/1;
+    width: 4rem;
+    height: 4rem;
+    background-color: #c2c2c279;
+    color: var(--primaryColor);
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     
-    <title>Boarding Group - Auth</title>
+    <title>Boarding Group - Account</title>
 
     <link rel="stylesheet" href="styleAccount.css">
-    <link rel="icon" type="image/png" href="/faviconSQ.png">
+    <link rel="icon" type="image/png" href="faviconSQ.png">
     <script type="module" src="account.js"></script>
 </head>
 <body>
@@ -22,11 +23,15 @@
             <p>Account</p>
             <hr>
             <a>Your Account</a>
-            <a>Log Out</a>
+            <a href="#" id="logout">Log Out</a>
         </nav>
     </header>
     <main>
-
+        <div class="box" id="accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
+            <span class="circle"><h1 id="monogram"></h1></span>
+            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
+        </div>
     </main>
 
 </body>
+</html>
