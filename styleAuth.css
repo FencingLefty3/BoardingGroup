@@ -70,6 +70,7 @@ input {
   padding:10px 12px;
   margin-top:6px;
   border-radius:8px;
+    
   box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
   font-size:1rem;
 }
@@ -79,6 +80,7 @@ button {
   color: var(--secondaryColor);
   margin-top:6px;
   border-radius:8px;
+  outline: none;
   box-shadow: #000 1.95px 1.95px 2.6px;
   font-size:1rem;
 }
