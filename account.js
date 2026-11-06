@@ -38,6 +38,14 @@ async function start(session) {
     })
     
 }
+function renderPage() {
+  const showAccount = window.location.hash === '#account'
+  $('account').style.display = showAccount ? 'flex' : 'none'
+  $('home').style.display = showAccount ? 'none' : 'flex'
+}
+
+window.addEventListener('hashchange', renderPage)
+renderPage()
 
 async function listMyTrips() {
   const { data, error } = await supabase

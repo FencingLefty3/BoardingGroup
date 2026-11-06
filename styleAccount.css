@@ -309,8 +309,9 @@ button.chipRemove {
     width: 100%;
     color: var(--primaryColor);
     text-decoration: none;
+    background-color: #c2c2c279;
 
-    box-shadow: #1a1f2a 3px 3px 6px 0px inset, #64738d7d -3px -3px 6px 1px inset;
+    box-shadow: #646464 3px 3px 6px 0px inset, #999999 -3px -3px 6px 1px inset;
     border-radius: 1rem;
 
     padding: 0.4rem;

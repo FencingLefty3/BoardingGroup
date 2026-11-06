@@ -13,7 +13,7 @@
     <header>
         <h4 style="position: absolute; top: .2rem;">Account</h4>
         <nav>
-            <a>Home</a>
+            <a href="#home">Home</a>
             <br>
             <p>Trips</p>
             <hr>
@@ -22,11 +22,11 @@
             <br>
             <p>Account</p>
             <hr>
-            <a>Your Account</a>
+            <a href="#account">Your Account</a>
             <a href="#" id="logout">Log Out</a>
         </nav>
     </header>
-    <main>
+    <main id="home">
         <div class="box" id="accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
             <span class="circle"><h1 id="monogram"></h1></span>
             <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
@@ -40,6 +40,14 @@
             </a>
         </template>
         
+    </main>
+
+    <main id="account" style="display: none;">
+        <div class="box" id="accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
+            <span class="circle"><h1 id="monogram"></h1></span>
+            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
+            <button id="delete" style="background: #9e4949;color: #c2c2c2;">Delete Account</button>
+        </div>
     </main>
     <dialog id="CreateTripDialog">
         <form id="createTripForm">

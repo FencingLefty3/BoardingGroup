@@ -19,9 +19,9 @@
 </head>
 <body>
     <header>
-        <div style="display: flex;flex-direction: row;gap: .8rem;align-items: center;">
+        <div style="display: flex;flex-direction: row;align-items: center;">
             <a href="account.html"><img style="height: 5rem;width: auto;aspect-ratio: 16 / 9 !important;" src="favicon.png"></a>
-            <h2 style="font-size: 3rem;height: fit-content;">Trip: A</h2>
+            <h2 id="tripTitle" style="font-size: 3rem;height: fit-content;margin-left: .8rem;"></h2><img id="editButton" src="ellipsis-vertical.png">
         </div><div class="share" id="share">
             <p style="padding-right: 0.2rem;">Share</p><img style="height: 1rem;" src="user-round-plus.png">
         </div>
@@ -34,7 +34,7 @@
         <button id="addSuggestion"><img src="plus.png"></button>
     </div>
 
-    <p style="width: 85%;opacity: .5;font-size: .8rem;margin-bottom: calc((-1 * 2rem) + 0.4rem);">Schedule</p>
+    <div style="width: 85%; display: flex;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: calc((-1 * 2rem) + 0.4rem);"><p style="width: fit-content;opacity: .5;font-size: .8rem;margin: 0;">Schedule</p> <button style="margin: 0;" class="eventBtn" id="createEvent">Event <img src="plus.png"></button></div>
 
     <div id="calendar"></div>
 
@@ -65,6 +65,26 @@
             <button type="submit">Add</button>
         </div>
         <p id="signUpMsg"></p>
+        </form>
+    </dialog>
+    <dialog id="editTripDialog">
+        <form id="editTripForm">
+            <h2>Edit Trip</h2>
+            <p style="width: 80%;">Title:</p>
+            <input type="text" id="NewTripTitle" required>
+
+            <div class="dateRow">
+            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                <p style="width: 90%;">Start Date:</p>
+                <input type="date" id="NewStartDate" required style="width: 90%;">
+            </div>
+            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                <p style="width: 90%;">End Date:</p>
+                <input type="date" id="NewEndDate" required style="width: 90%;">
+            </div></div>
+
+            <p id="editTripMessage" role="status" aria-live="polite"></p>
+            <button style="margin-top: 1.2rem;" type="submit">Done</button>
         </form>
     </dialog>
 
