@@ -23,6 +23,13 @@ async function start(session) {
     $('displayName').textContent = name
     $('monogram').textContent = Array.from(name)[0].toUpperCase()
 
+    try {
+      renderTrips(await listMyTrips(), session.user.id)
+    } catch (err) {
+      console.error(err)
+      $('tripsInfo').textContent = 'Could not load your trips.'
+    }
+
     $('logout').addEventListener('click', async e => {
         e.preventDefault()
         await supabase.auth.signOut()
@@ -30,6 +37,55 @@ async function start(session) {
     
     })
     
+}
+
+async function listMyTrips() {
+  const { data, error } = await supabase
+    .from('trips')
+    .select('id, title, start_date, end_date, trip_members(user_id, role, profiles(display_name))')
+    .order('start_date', { ascending: true })
+  if (error) throw error
+  return data
+}
+
+const dateFmt = new Intl.DateTimeFormat(undefined, {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC'
+})
+const dateRange = (start, end) =>
+  `${dateFmt.format(new Date(start))} – ${dateFmt.format(new Date(end))}`
+
+function renderTrips(trips, myId) {
+  const box = $('tripsInfo')
+  box.replaceChildren()
+
+  if (!trips.length) {
+    box.textContent = 'No trips yet. Create one to get started.'
+    return
+  }
+
+  const template = $('tripTemplate')
+  for (const trip of trips) {
+    const card = template.content.firstElementChild.cloneNode(true)
+    card.href = `app.html?id=${encodeURIComponent(trip.id)}`
+
+    const members = trip.trip_members ?? []
+    const others = members
+      .filter(member => member.user_id !== myId)
+      .map(member => member.profiles?.display_name ?? 'Someone')
+    const mine = members.find(member => member.user_id === myId)
+
+    card.querySelector('.tripTitle').textContent = trip.title
+    card.querySelector('.tripDates').textContent = dateRange(trip.start_date, trip.end_date)
+    card.querySelector('.tripPeople').textContent = others.length
+      ? others.slice(0, 3).join(', ') + (others.length > 3 ? ` +${others.length - 3} more` : '')
+      : 'Just you'
+    card.querySelector('.tripRole').textContent = mine?.role === 'owner' ? 'Owner' : 'Member'
+
+    box.append(card)
+  }
 }
 
 
@@ -202,7 +258,7 @@ $('createTripForm').addEventListener('submit', async e => {
     }
 
     $('CreateTripDialog').close()
-    location.href = 'app.html'        // swap for your trip page when it exists
+    location.href = `app.html?id=${encodeURIComponent(createdTripId)}`
   } catch (err) {
     msg.textContent = err.message || 'Something went wrong. Please try again.'
   } finally {

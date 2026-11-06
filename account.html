@@ -31,6 +31,15 @@
             <span class="circle"><h1 id="monogram"></h1></span>
             <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
         </div>
+        <div class="box" id="tripsInfo"></div>
+        <template id="tripTemplate">
+            <a class="tripDisplay">
+                <h2 class="tripTitle" style="margin: .2rem;"></h2>
+                <p class="tripDates" style="margin: 0;"></p>
+                <div style="display: flex; flex-direction: row;gap: 0.5rem;"><p class="tripPeople" style="margin: 0;"></p><p style="margin: 0;">|</p><p class="tripRole" style="margin: 0;"></p></div>
+            </a>
+        </template>
+        
     </main>
     <dialog id="CreateTripDialog">
         <form id="createTripForm">
@@ -47,11 +56,11 @@
 
             <div class="dateRow">
             <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
-                <p style="width: 90%;">StartDate:</p>
+                <p style="width: 90%;">Start Date:</p>
                 <input type="date" id="NewStartDate" required style="width: 90%;">
             </div>
             <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
-                <p style="width: 90%;">EndDate:</p>
+                <p style="width: 90%;">End Date:</p>
                 <input type="date" id="NewEndDate" required style="width: 90%;">
             </div></div>
 

@@ -2,6 +2,25 @@
     --primaryColor: #c2c2c2; 
     --secondaryColor: #3e4a60;
     --tertiaryColor: #5d5484; 
+    scrollbar-color: var(--tertiaryColor) var(--primaryColor);
+    scrollbar-width: thin;
+    
+}
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+*::-webkit-scrollbar-track {
+    background: var(--primaryColor);
+    border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb {
+    background: var(--tertiaryColor);
+    border: 2px solid var(--primaryColor);
+    border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--secondaryColor);
 }
 p, a {
     font-family: "Lucida Console", "Courier New", monospace;
@@ -84,8 +103,10 @@ main {
     color: var(--secondaryColor);
     display: flex;
     flex-direction: column;
+    gap: 0.8rem;
     justify-content: top;
     align-items: center;
+    overflow-y: auto;
 
     box-sizing: border-box; 
     width: 80%;            /* Safer than 100svw as it accounts for scrollbars */
@@ -278,4 +299,43 @@ button.chipRemove {
     margin-left: 0.35em;
     line-height: 1;
     cursor: pointer;
+}
+.tripDisplay {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: var(--primaryColor);
+    text-decoration: none;
+
+    box-shadow: #1a1f2a 3px 3px 6px 0px inset, #64738d7d -3px -3px 6px 1px inset;
+    border-radius: 1rem;
+
+    padding: 0.4rem;
+    min-width: 0;
+    min-height: 10rem;
+}
+.tripDisplay::after {
+    display: none;
+}
+.tripDisplay:hover {
+    color: var(--primaryColor);
+    box-shadow: #000 1.95px 1.95px 2.6px !important;
+}
+
+.box#tripsInfo {
+    box-sizing: content-box;
+    background: var(--secondaryColor);
+    color: var(--primaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 0.8rem;
+    padding: 10px;
+    width: 80%;
 }
