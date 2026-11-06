@@ -5,12 +5,68 @@
     
     <title>Boarding Group - App</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="/faviconSQ.png">
+    <link rel="stylesheet" href="styleApp.css">
+    <link rel="icon" type="image/png" href="faviconSQ.png">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.4/all/global.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.4/themes/forma/global.js" crossorigin></script>
+
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.4/skeleton.css' rel='stylesheet' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.4/themes/forma/theme.css' rel='stylesheet' />
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@7.1.4/themes/forma/palettes/purple.css' rel='stylesheet' />
+
+    <script type="module" src="app.js"></script>
+    
 </head>
-
 <body>
+    <header>
+        <div style="display: flex;flex-direction: row;gap: .8rem;align-items: center;">
+            <a href="account.html"><img style="height: 5rem;width: auto;aspect-ratio: 16 / 9 !important;" src="favicon.png"></a>
+            <h2 style="font-size: 3rem;height: fit-content;">Trip: A</h2>
+        </div><div class="share" id="share">
+            <p style="padding-right: 0.2rem;">Share</p><img style="height: 1rem;" src="user-round-plus.png">
+        </div>
+    </header>
+    <p style="width: 85%;opacity: .5;font-size: .8rem;margin-bottom: calc((-1 * 2rem) + 0.4rem);">Suggestions</p>
+    <div style="display: flex; flex-direction: row;align-items: center;justify-content: center;gap: 0.5rem;width: 100dvw;">
+        <div class="corkBox" id="suggestionBoard">
 
+        </div>
+        <button id="addSuggestion"><img src="plus.png"></button>
+    </div>
+
+    <p style="width: 85%;opacity: .5;font-size: .8rem;margin-bottom: calc((-1 * 2rem) + 0.4rem);">Schedule</p>
+
+    <div id="calendar"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <dialog id="SuggestionDialog">
+        <form id="createSuggestionForm">
+            <h2>Add Suggestion</h2>
+            <p style="width: 80%;">Name:</p>
+            <input type="text" id="NewSuggestionTitle" required>
+
+            <p style="width: 80%;">Comment:</p>
+            <input type="text" id="commentInput" autocomplete="off">
+
+            <div style="display: flex;flex-direction: row;width: 80%;justify-content: center;gap: 10%;margin: 5% 0;">
+            <button type="button" id="exit">Cancel</button>
+            <button type="submit">Add</button>
+        </div>
+        <p id="signUpMsg"></p>
+        </form>
+    </dialog>
 
 </body>
 </html>

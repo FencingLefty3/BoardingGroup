@@ -14,17 +14,17 @@ async function start(session) {
         .select('display_name')
         .eq('id', session.user.id)
         .single()
-
+    const user = session.user
     const name = 
-    profile?.display_name ||
-    user.user_metadata?.username ||
-    user.email.split('@')[0]
+        profile?.display_name ||
+        user.user_metadata?.username ||
+        user.email.split('@')[0]
 
     $('displayName').textContent = name
     $('monogram').textContent = Array.from(name)[0].toUpperCase()
 
     $('logout').addEventListener('click', async e => {
-        e.preventDefault
+        e.preventDefault()
         await supabase.auth.signOut()
         location.replace('index.html')
     
@@ -32,12 +32,26 @@ async function start(session) {
     
 }
 
-$('exit').addEventListener('click', () => {
-    $('CreateTripDialog').close()
-})
-$('createTrip').addEventListener('click', event => {
-    event.preventDefault()
-    $('CreateTripDialog').showModal()
+
+function resetInvites() {
+  invitees.length = 0
+  renderChips()
+  inviteInput.value = ''
+  inviteHint.textContent = ''
+}
+
+let createdTripId = null      // lets a retry skip re-creating the trip
+
+$('exit').addEventListener('click', () => $('CreateTripDialog').close())
+
+$('createTrip').addEventListener('click', e => {
+  e.preventDefault()
+  $('createTripForm').reset()
+  resetInvites()
+  $('signUpMsg').textContent = ''
+  createdTripId = null
+  $('NewEndDate').min = ''
+  $('CreateTripDialog').showModal()
 })
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -124,3 +138,74 @@ export function getInviteEmails() {
 
 
 //-----------------------------------------Submit------------------------------------------//
+
+$('NewStartDate').addEventListener('change', () => {
+    const start = $('NewStartDate').value
+    $('NewEndDate').min = start
+    if ($('NewEndDate').value && $('NewEndDate').value < start) $('NewEndDate').value = start
+})
+
+$('createTripForm').addEventListener('submit', async e => {
+    e.preventDefault()
+    if (!session) return
+
+    const msg = $('signUpMsg')
+    const btn = e.target.querySelector('button[type="submit"]')
+    msg.textContent = ''
+
+    const title = $('NewTripTitle').value.trim()
+    const start = $('NewStartDate').value
+    const end = $('NewEndDate').value
+
+    if (!title) {
+        msg.textContent = 'Enter Name!'
+        return
+    }
+    if (end < start) {
+        msg.textContent = 'The end date must be on or after the start date.'
+    }
+
+    const { emails, hasInvalid } = getInviteEmails()
+    if (hasInvalid) {
+      msg.textContent = 'Invalid invite email(s).'
+      return
+    }
+
+    const me = session.user.email.toLowerCase()
+    const toInvite = emails.filter(addr => addr !== me)
+
+    btn.disabled = true
+    try {
+      if(!createdTripId) {
+        const { data: tripId, error } = await supabase.rpc('create_trip', {
+          p_title: title, p_start: start, p_end: end
+        })
+        if (error) throw error
+        createdTripId = tripId
+      }
+
+      if (toInvite.length) {
+        const { error: invErr } = await supabase.from('trip_invites').upsert(
+        toInvite.map(email => ({ trip_id: createdTripId, email })),
+        { onConflict: 'trip_id,email', ignoreDuplicates: true }
+      )
+      if (invErr) throw invErr
+
+      // 3) email them (the invites are already saved if this step fails)
+      const { error: fnErr } = await supabase.functions.invoke('send-invites', {
+        body: { tripId: createdTripId }
+      })
+      if (fnErr) {
+        console.error(fnErr)
+        alert('Your trip was created, but the invite emails could not be sent. You can resend them later.')
+      }
+    }
+
+    $('CreateTripDialog').close()
+    location.href = 'app.html'        // swap for your trip page when it exists
+  } catch (err) {
+    msg.textContent = err.message || 'Something went wrong. Please try again.'
+  } finally {
+    btn.disabled = false
+  }
+})

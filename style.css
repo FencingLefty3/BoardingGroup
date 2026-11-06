@@ -12,6 +12,7 @@ h1, h2, h3, h4 {
 header {
     background: var(--secondaryColor);
     color: var(--primaryColor);
+    color: var(--primaryColor);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -25,12 +26,7 @@ header {
     padding: 10px;
     height: 5rem;
 }
-header img {
-    width: 3rem;
-    height: 3rem;
 
-    margin: 0;
-}
 header h2 {
     font-size: 3rem;
     margin: 0;
