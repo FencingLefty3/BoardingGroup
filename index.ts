@@ -1,3 +1,4 @@
+// @ts-ignore Deno resolves remote URL imports at runtime.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const deno = (globalThis as typeof globalThis & {
