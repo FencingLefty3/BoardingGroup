@@ -3,7 +3,7 @@
 
 ### What?
 
-Boarding group is a travel planner for colabration between you and your group (friends).
+Boarding group is a travel planner for colabration between you and your group (friends). Organize your trip, share your plans, schedule events, and suggest ideas.
 
 ### Where?
 
