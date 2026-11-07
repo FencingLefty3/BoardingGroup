@@ -23,9 +23,9 @@
         <div style="display: flex;flex-direction: row;align-items: center;">
             <a href="account.html"><img style="height: 5rem;width: auto;aspect-ratio: 16 / 9 !important;" src="favicon.png"></a>
             <h2 id="tripTitle" style="font-size: 3rem;height: fit-content;margin-left: .8rem;"></h2><img id="editButton" src="ellipsis-vertical.png">
-        </div><div class="share" id="share">
+        </div><button type="button" class="share" id="share" aria-haspopup="dialog" aria-controls="shareDialog">
             <p style="padding-right: 0.2rem;">Share</p><img style="height: 1rem;" src="user-round-plus.png">
-        </div>
+        </button>
     </header>
     <p style="width: 85%;opacity: .5;font-size: .8rem;margin-bottom: calc((-1 * 2rem) + 0.4rem);">Suggestions</p>
     <div style="display: flex; flex-direction: row;align-items: center;justify-content: center;gap: 0.5rem;width: 100dvw;">
@@ -97,6 +97,24 @@
                 <button type="submit">Done</button>
             </div>
         </form>
+    </dialog>
+    <dialog id="shareDialog">
+        <section id="sharePanel">
+            <h2>Share trip</h2>
+            <p id="shareStatus" role="status" aria-live="polite"></p>
+            <h3>People with access</h3>
+            <ul id="sharedPeopleList" class="sharingList"></ul>
+            <section id="pendingInvitesSection" hidden>
+                <h3>Invitations</h3>
+                <ul id="pendingInvitesList" class="sharingList"></ul>
+            </section>
+            <form id="invitePersonForm" hidden>
+                <label for="invitePersonEmail">Invite by email</label>
+                <input id="invitePersonEmail" type="email" autocomplete="email" required>
+                <button type="submit">Send Invite</button>
+            </form>
+            <button type="button" id="closeShareDialog">Done</button>
+        </section>
     </dialog>
     <dialog id="newEventDialog">
         <form id="newEventForm">

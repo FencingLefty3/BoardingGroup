@@ -72,9 +72,67 @@ deno.serve(async (req) => {
         from: deno.env.get('FROM_EMAIL'),
         to: invite.email,
         subject: `You're invited to ${tripTitle}`,
-        html: `<p>You've been invited to <b>${esc(tripTitle)}</b> on Boarding Party.</p>
-               <p><a href="${link}">Join the trip</a></p>
-               <p>No account yet? You'll be asked to create one first.</p>`,
+        html: `<div style="
+    background: #c2c2c2;
+    color: #3e4a60;
+    padding: 20px;
+    font-family: 'Lucida Console', 'Courier New', monospace;
+">
+
+    <div style="
+        color: #3e4a60;
+        padding: 20px;
+    ">
+
+        <h2 style="
+            font-family: 'Lato', Helvetica, Arial, sans-serif;
+            margin: 0 0 20px;
+            font-size: 1.5rem;
+        ">
+            Boarding Group
+        </h2>
+
+        <hr style="
+            opacity: .5;
+            margin-top: 0;
+            width: 100%;
+        ">
+
+        <p style="
+            opacity: .8;
+            font-size: .8rem;
+            margin-bottom: 16px;
+        ">
+            You've been invited to
+            <b>${esc(tripTitle)}</b>
+            on Boarding Party.
+        </p>
+
+        <a href="${link}" style="
+            display: inline-block;
+            background: #5d5484;
+            color: #c2c2c2;
+            font-family: 'Lucida Console', 'Courier New', monospace;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 8px;
+            box-shadow: #000 1.95px 1.95px 2.6px;
+            margin-bottom: 6px;
+        ">
+            Join the trip →
+        </a>
+
+        <p style="
+            opacity: .5;
+            font-size: .8rem;
+            margin: 0;
+        ">
+            No account yet? You'll be asked to create one first.
+        </p>
+
+    </div>
+
+</div>`,
       }),
     })
 

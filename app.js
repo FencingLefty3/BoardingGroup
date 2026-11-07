@@ -55,6 +55,14 @@ $('createEvent').addEventListener('click', e => {
   $('newEventMessage').textContent = ''
   $('newEventDialog').showModal()
 })
+$('share').addEventListener('click', async () => {
+  $('shareStatus').textContent = ''
+  $('sharedPeopleList').replaceChildren()
+  $('pendingInvitesList').replaceChildren()
+  $('shareDialog').showModal()
+  await loadSharingDetails()
+})
+$('closeShareDialog').addEventListener('click', () => $('shareDialog').close())
 $('leftCal').addEventListener('click', () => calendar?.prev())
 $('rightCal').addEventListener('click', () => calendar?.next())
 
@@ -200,6 +208,7 @@ $('createSuggestionForm').addEventListener('submit', e => {
 
 const tripId = new URLSearchParams(window.location.search).get('id')
 let currentTrip = null
+let currentTripRole = null
 async function loadTripTitle() {
   if (!tripId) {
     $('tripTitle').textContent = 'No trip selected'
@@ -231,10 +240,12 @@ async function loadTripDeletePermission() {
   const { data: { user }, error: userError } = await supabase.auth.getUser()
   if (userError) {
     console.error('Could not check trip ownership:', userError)
+    currentTripRole = null
     $('deleteTripButton').hidden = true
     return
   }
   if (!user) {
+    currentTripRole = null
     $('deleteTripButton').hidden = true
     return
   }
@@ -248,11 +259,173 @@ async function loadTripDeletePermission() {
 
   if (error) {
     console.error('Could not check trip ownership:', error)
+    currentTripRole = null
     $('deleteTripButton').hidden = true
     return
   }
-  $('deleteTripButton').hidden = data?.role !== 'owner'
+  currentTripRole = data?.role ?? null
+  $('deleteTripButton').hidden = currentTripRole !== 'owner'
 }
+
+function addSharedPersonRow(member, currentUserId) {
+  const row = document.createElement('li')
+  row.className = 'sharingListItem'
+
+  const name = document.createElement('span')
+  const displayName = member.profiles?.display_name || 'Trip member'
+  name.textContent = `${displayName}${member.user_id === currentUserId ? ' (you)' : ''} · ${member.role}`
+  row.append(name)
+
+  if (currentTripRole === 'owner' && member.role !== 'owner' && member.user_id !== currentUserId) {
+    const removeButton = document.createElement('button')
+    removeButton.type = 'button'
+    removeButton.className = 'removeSharedPerson'
+    removeButton.textContent = 'Remove'
+    removeButton.addEventListener('click', () => removeSharedPerson(member, removeButton))
+    row.append(removeButton)
+  }
+
+  $('sharedPeopleList').append(row)
+}
+
+async function loadSharingDetails() {
+  if (!tripId || !currentTrip) {
+    $('shareStatus').textContent = 'Select a trip before managing who it is shared with.'
+    return
+  }
+
+  $('shareStatus').textContent = 'Loading people…'
+  try {
+    await loadTripDeletePermission()
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    if (userError) throw userError
+
+    const { data: members, error: membersError } = await supabase
+      .from('trip_members')
+      .select('user_id, role, profiles(display_name)')
+      .eq('trip_id', tripId)
+      .order('role', { ascending: true })
+
+    if (membersError) throw membersError
+
+    $('sharedPeopleList').replaceChildren()
+    const sharedMembers = members ?? []
+    sharedMembers.forEach(member => addSharedPersonRow(member, user?.id))
+    if (!sharedMembers.length) {
+      const empty = document.createElement('li')
+      empty.textContent = 'No members found.'
+      $('sharedPeopleList').append(empty)
+    }
+
+    const canManageSharing = currentTripRole === 'owner'
+    $('invitePersonForm').hidden = !canManageSharing
+    $('pendingInvitesSection').hidden = !canManageSharing
+
+    if (canManageSharing) {
+      const { data: invites, error: invitesError } = await supabase
+        .from('trip_invites')
+        .select('id, email, status, emailed_at')
+        .eq('trip_id', tripId)
+        .eq('status', 'pending')
+        .order('email', { ascending: true })
+
+      if (invitesError) throw invitesError
+      $('pendingInvitesList').replaceChildren()
+      const pendingInvites = invites ?? []
+      pendingInvites.forEach(invite => {
+        const row = document.createElement('li')
+        row.textContent = `${invite.email}${invite.emailed_at ? ' · email sent' : ' · not sent yet'}`
+        $('pendingInvitesList').append(row)
+      })
+      if (!pendingInvites.length) {
+        const empty = document.createElement('li')
+        empty.textContent = 'No outstanding invitations.'
+        $('pendingInvitesList').append(empty)
+      }
+    }
+
+    $('shareStatus').textContent = ''
+  } catch (error) {
+    console.error('Could not load trip sharing details:', error)
+    $('shareStatus').textContent = `Could not load sharing details: ${error.message}`
+  }
+}
+
+async function removeSharedPerson(member, button) {
+  if (currentTripRole !== 'owner' || member.role === 'owner') return
+  if (!window.confirm(`Remove ${member.profiles?.display_name || 'this person'} from the trip?`)) return
+
+  button.disabled = true
+  $('shareStatus').textContent = ''
+  try {
+    const { count, error } = await supabase
+      .from('trip_members')
+      .delete({ count: 'exact' })
+      .eq('trip_id', tripId)
+      .eq('user_id', member.user_id)
+
+    if (error) throw error
+    if (count !== 1) throw new Error('No member was removed. Check the trip_members DELETE permission and row-level security policy.')
+
+    await loadSharingDetails()
+  } catch (error) {
+    console.error('Could not remove trip member:', error)
+    $('shareStatus').textContent = `Could not remove person: ${error.message}`
+    button.disabled = false
+  }
+}
+
+$('invitePersonForm').addEventListener('submit', async event => {
+  event.preventDefault()
+  if (currentTripRole !== 'owner' || !tripId || !currentTrip) return
+
+  const email = $('invitePersonEmail').value.trim().toLowerCase()
+  const button = event.currentTarget.querySelector('button[type="submit"]')
+  button.disabled = true
+  $('shareStatus').textContent = ''
+
+  try {
+    const { error: inviteError } = await supabase
+      .from('trip_invites')
+      .upsert(
+        { trip_id: tripId, email, status: 'pending', emailed_at: null },
+        { onConflict: 'trip_id,email' }
+      )
+
+    if (inviteError) throw inviteError
+
+    const { data, error: sendError } = await supabase.functions.invoke('send-invites', {
+      body: { tripId }
+    })
+    if (sendError) {
+      let detail = sendError.message
+      if (sendError.context instanceof Response) {
+        const responseText = await sendError.context.text()
+        try {
+          const responseBody = JSON.parse(responseText)
+          detail = responseBody.error ?? responseBody.message ?? responseText
+        } catch {
+          detail = responseText || detail
+        }
+      }
+      throw new Error(`Invite saved, but email could not be sent: ${detail}`)
+    }
+    if (data?.failed?.length) {
+      throw new Error(`Invite saved, but email could not be sent: ${data.failed.map(item => `${item.email}: ${item.reason}`).join('; ')}`)
+    }
+
+    $('invitePersonEmail').value = ''
+    await loadSharingDetails()
+    $('shareStatus').textContent = `Invitation sent to ${email}.`
+  } catch (error) {
+    console.error('Could not invite person to trip:', error)
+    const message = error.message
+    await loadSharingDetails()
+    $('shareStatus').textContent = message
+  } finally {
+    button.disabled = false
+  }
+})
 
 function getEventLocation(notes, title) {
   if (!notes) return ''

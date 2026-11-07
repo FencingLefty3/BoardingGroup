@@ -74,6 +74,7 @@ body {
     height: 100svh;
 }
 .share {
+    box-sizing: border-box;
     background: var(--primaryColor);
     color: var(--secondaryColor);
     margin: 0;
@@ -87,6 +88,95 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px;
+    border: 0;
+    width: auto;
+    cursor: pointer;
+}
+.share:hover {
+    margin: 0;
+}
+#shareDialog[open] {
+    box-sizing: border-box;
+    width: min(34rem, 90vw);
+    height: auto;
+    max-height: 85svh;
+    overflow-y: auto;
+    padding: 1.25rem;
+}
+#sharePanel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.6rem;
+}
+#sharePanel h2,
+#sharePanel h3,
+#sharePanel p {
+    margin: 0;
+}
+#sharePanel h3 {
+    font-size: 1rem;
+}
+.sharingList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    max-height: 10rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.sharingListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    overflow-wrap: anywhere;
+}
+.removeSharedPerson {
+    flex: none;
+    width: auto;
+    margin: 0;
+    background: #9e4949;
+    color: #fff;
+}
+.removeSharedPerson:hover {
+    margin: 0;
+}
+#pendingInvitesSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+#pendingInvitesSection[hidden],
+#invitePersonForm[hidden] {
+    display: none;
+}
+#invitePersonForm {
+    align-items: stretch;
+    gap: 0.4rem;
+    margin: 0.5rem 0;
+}
+#invitePersonForm label {
+    align-self: flex-start;
+}
+#invitePersonForm input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 2.5rem;
+    margin: 0;
+}
+#invitePersonForm button,
+#closeShareDialog {
+    width: auto;
+    align-self: flex-end;
+    margin: 0;
+}
+#invitePersonForm button:hover,
+#closeShareDialog:hover {
+    margin: 0;
 }
 .share p {
     margin: 0;
