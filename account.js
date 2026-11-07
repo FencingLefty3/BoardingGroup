@@ -277,10 +277,28 @@ $('createTripForm').addEventListener('submit', async e => {
         body: { tripId: createdTripId }
       })
       if (fnErr) {
-        let detail = null
-        try { detail = await fnErr.context.json() } catch {}      // the body the function (or Supabase) sent back
-        console.error(fnErr.name, fnErr.message, detail)
-        alert(`Your trip was created, but the invite emails could not be sent.\n\n${detail?.error ?? detail?.message ?? fnErr.message}`)
+        let detail = ''
+        if (fnErr.context instanceof Response) {
+          const responseText = await fnErr.context.text()
+          try {
+            const responseBody = JSON.parse(responseText)
+            detail = responseBody.error ?? responseBody.message ?? responseText
+          } catch {
+            detail = responseText
+          }
+        } else if (fnErr.context instanceof Error) {
+          detail = fnErr.context.message
+        } else if (typeof fnErr.context === 'string') {
+          detail = fnErr.context
+        }
+
+        console.error('Invite function request failed:', fnErr.name, fnErr.message, detail)
+        const explanation = detail || fnErr.message
+        const deploymentHint = fnErr.name === 'FunctionsFetchError'
+          ? ' Check that send-invites is deployed to this Supabase project and that its URL matches this app.'
+          : ''
+        msg.textContent = `Your trip was created, but the invite emails could not be sent. ${explanation}.${deploymentHint} You can submit again to retry.`
+        return
       }
     }
 
