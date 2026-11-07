@@ -29,3 +29,12 @@ To pick back up, load the trip on your account page.
 ## Screenshots
 
 ![app](https://github.com/FencingLefty3/FencingLefty3.github.io/blob/main/assets/Screenshot07.png?raw=true)
+
+## Ai use
+
+Some as was used for debuging. Ai was also used for some parts of backend code.
+
+
+#
+
+© FencingLefty. MIT licence.
