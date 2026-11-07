@@ -280,6 +280,7 @@ async function loadTripTitle() {
     $('tripTitle').textContent = data.title
     $('eventDateTime').min = `${data.start_date}T00:00`
     $('eventDateTime').max = `${data.end_date}T23:59`
+    calendar?.gotoDate(data.start_date)
     await loadTripDeletePermission()
     await loadTripSuggestions()
     await loadTripEvents()
