@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
+
     <title>Boarding Group - Account</title>
 
     <link rel="stylesheet" href="styleAccount.css">
@@ -26,10 +26,11 @@
             <a href="#" id="logout">Log Out</a>
         </nav>
     </header>
+
     <main id="home">
-        <div class="box" id="accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
-            <span class="circle"><h1 id="monogram"></h1></span>
-            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
+        <div class="box accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
+            <span class="circle"><h1 class="monogram"></h1></span>
+            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 class="displayName"></h3><h3>·</h3><h3 class="acctEmail" style="opacity: 0.5;"></h3></div>
         </div>
         <div class="box" id="tripsInfo"></div>
         <template id="tripTemplate">
@@ -39,16 +40,16 @@
                 <div style="display: flex; flex-direction: row;gap: 0.5rem;"><p class="tripPeople" style="margin: 0;"></p><p style="margin: 0;">|</p><p class="tripRole" style="margin: 0;"></p></div>
             </a>
         </template>
-        
     </main>
 
     <main id="account" style="display: none;">
-        <div class="box" id="accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
-            <span class="circle"><h1 id="monogram"></h1></span>
-            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 id="displayName"></h3><h3 >·</h3><h3 style="opacity: 0.5;" id="acctEmail"></h3></div>
+        <div class="box accountInfo" style="display: flex; flex-direction: column; align-items: center;justify-content: center;">
+            <span class="circle"><h1 class="monogram"></h1></span>
+            <div style="display: flex; flex-direction: row;gap: 0.5rem;"><h3 class="displayName"></h3><h3>·</h3><h3 class="acctEmail" style="opacity: 0.5;"></h3></div>
             <button id="delete" style="background: #9e4949;color: #c2c2c2;">Delete Account</button>
         </div>
     </main>
+
     <dialog id="CreateTripDialog">
         <form id="createTripForm">
             <h2>Create Trip</h2>
@@ -58,25 +59,26 @@
             <p style="width: 80%;">Invite Emails (optional):</p>
             <div id="inviteBox" class="chipBox">
                 <div class="chips"></div>
-                <input class="emailInput" type="email" id="inviteInput" autocomplete="off">
+                <input class="emailInput" type="text" inputmode="email" id="inviteInput" autocomplete="off">
             </div>
             <p id="inviteHint" class="hint"></p>
 
             <div class="dateRow">
-            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
-                <p style="width: 90%;">Start Date:</p>
-                <input type="date" id="NewStartDate" required style="width: 90%;">
+                <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                    <p style="width: 90%;">Start Date:</p>
+                    <input type="date" id="NewStartDate" required style="width: 90%;">
+                </div>
+                <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
+                    <p style="width: 90%;">End Date:</p>
+                    <input type="date" id="NewEndDate" required style="width: 90%;">
+                </div>
             </div>
-            <div style="display: flex; flex-direction: column;width: 49%;align-items: center;justify-content: center;">
-                <p style="width: 90%;">End Date:</p>
-                <input type="date" id="NewEndDate" required style="width: 90%;">
-            </div></div>
 
             <div style="display: flex;flex-direction: row;width: 80%;justify-content: center;gap: 10%;margin: 5% 0;">
-            <button type="button" id="exit">Cancel</button>
-            <button type="submit">Submit</button>
-        </div>
-        <p id="signUpMsg"></p>
+                <button type="button" id="exit">Cancel</button>
+                <button type="submit">Submit</button>
+            </div>
+            <p id="signUpMsg"></p>
         </form>
     </dialog>
 

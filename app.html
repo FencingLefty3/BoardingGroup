@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="https://photon.komoot.io*"/>
     
     <title>Boarding Group - App</title>
 
@@ -33,10 +34,11 @@
         </div>
         <button id="addSuggestion"><img src="plus.png"></button>
     </div>
-
-    <div style="width: 85%; display: flex;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: calc((-1 * 2rem) + 0.4rem);"><p style="width: fit-content;opacity: .5;font-size: .8rem;margin: 0;">Schedule</p> <button style="margin: 0;" class="eventBtn" id="createEvent">Event <img src="plus.png"></button></div>
+    <p style="width: fit-content;opacity: .5;font-size: .8rem;margin: 0;">Schedule</p>
+    <div style="width: 85%; display: flex;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: calc((-1 * 2rem) + 0.4rem);"><div><button style="margin: 0;" class="eventBtn" id="leftCal"><img src="circle-chevron.png"></button><button style="margin: 0;" class="eventBtn" id="rightCal"><img style="transform: rotate(180deg);" src="circle-chevron.png"></button></div> <button style="margin: 0;" class="eventBtn" id="createEvent">Event <img src="plus.png"></button></div>
 
     <div id="calendar"></div>
+    <p id="calendarMessage" role="status" aria-live="polite"></p>
 
 
 
@@ -85,6 +87,82 @@
 
             <p id="editTripMessage" role="status" aria-live="polite"></p>
             <button style="margin-top: 1.2rem;" type="submit">Done</button>
+        </form>
+    </dialog>
+    <dialog id="newEventDialog">
+        <form id="newEventForm">
+            <h2>Create Event</h2>
+            <p id="eventSearchLabel" style="width: 80%;">Search Location:</p>
+            <div class="eventLocationRow">
+                <div id="generalLocationFields" class="eventLocationSearch">
+                    <input id="eventLocation" type="text" aria-label="Search location">
+                    <div id="locationResults" role="listbox" aria-label="Location search results" hidden></div>
+                    <p id="locationSearchStatus" role="status" aria-live="polite"></p>
+                </div>
+                <div id="flightAirportFields" hidden>
+                    <label for="departureAirport">Departure airport</label>
+                    <div class="eventLocationSearch">
+                        <input id="departureAirport" type="text" autocomplete="off" aria-label="Search departure airport">
+                        <div id="departureAirportResults" class="airportResults" role="listbox" aria-label="Departure airport results" hidden></div>
+                        <p id="departureAirportStatus" role="status" aria-live="polite"></p>
+                    </div>
+                    <label for="arrivalAirport">Arrival airport</label>
+                    <div class="eventLocationSearch">
+                        <input id="arrivalAirport" type="text" autocomplete="off" aria-label="Search arrival airport">
+                        <div id="arrivalAirportResults" class="airportResults" role="listbox" aria-label="Arrival airport results" hidden></div>
+                        <p id="arrivalAirportStatus" role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+                <div class="eventTypePicker">
+                    <input type="hidden" name="eventType" id="eventType" value="food">
+                    <button id="eventTypeToggle" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="eventTypeMenu">
+                        <img id="eventTypeIcon" src="utensils.png" alt="">
+                        <span id="eventTypeLabel">Food</span>
+                        <span aria-hidden="true">▾</span>
+                    </button>
+                    <div id="eventTypeMenu" role="menu" hidden>
+                        <button type="button" role="menuitem" data-event-type="food" data-label="Food" data-icon="utensils.png">
+                            <img src="utensils.png" alt="">Food
+                        </button>
+                        <button type="button" role="menuitem" data-event-type="hotel" data-label="Hotel" data-icon="bed.png">
+                            <img src="bed.png" alt="">Hotel
+                        </button>
+                        <button type="button" role="menuitem" data-event-type="flight" data-label="Flight" data-icon="plane.png">
+                            <img src="plane.png" alt="">Flight
+                        </button>
+                        <button type="button" role="menuitem" data-event-type="location" data-label="Location" data-icon="map-pin.png">
+                            <img src="map-pin.png" alt="">Location
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <label id="eventDateTimeLabel" for="eventDateTime">Date and time</label>
+            <input id="eventDateTime" type="datetime-local" required>
+            <p id="newEventMessage" role="status" aria-live="polite"></p>
+            <div class="newEventActions">
+                <button id="cancelNewEvent" type="button">Cancel</button>
+                <button type="submit">Create Event</button>
+            </div>
+            <small style="position: absolute; bottom: 0.2rem;">Location data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></small>
+        </form>
+    </dialog>
+    <dialog id="eventDetailsDialog">
+        <form id="eventDetailsForm">
+            <h2>Edit Event</h2>
+            <label for="editEventTitle">Name</label>
+            <input id="editEventTitle" type="text" required>
+            <label for="editEventLocation">Location / details</label>
+            <textarea id="editEventLocation" rows="3"></textarea>
+            <label for="editEventStart">Starts</label>
+            <input id="editEventStart" type="datetime-local" required>
+            <label for="editEventEnd">Ends</label>
+            <input id="editEventEnd" type="datetime-local" required>
+            <p id="editEventMessage" role="status" aria-live="polite"></p>
+            <div class="newEventActions">
+                <button id="deleteEvent" type="button" class="deleteEventButton">Delete</button>
+                <button id="cancelEditEvent" type="button">Cancel</button>
+                <button type="submit">Save Changes</button>
+            </div>
         </form>
     </dialog>
 

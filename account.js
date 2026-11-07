@@ -1,43 +1,56 @@
 import { supabase } from './supabase.js'
 import { requireAuth } from './guard.js'
+import { claimPendingInvite } from './invites.js'
 
 const $ = id => document.getElementById(id)
+const setAll = (selector, text) =>
+  document.querySelectorAll(selector).forEach(el => { el.textContent = text })
 
 const session = await requireAuth()
-if (session) start(session)
+
+// ----------------------------------------------------------- page and profile
 
 async function start(session) {
-    $('acctEmail').textContent = session.user.email
+  const user = session.user
 
-    const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('display_name')
-        .eq('id', session.user.id)
-        .single()
-    const user = session.user
-    const name = 
-        profile?.display_name ||
-        user.user_metadata?.username ||
-        user.email.split('@')[0]
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name')
+    .eq('id', user.id)
+    .single()
 
-    $('displayName').textContent = name
-    $('monogram').textContent = Array.from(name)[0].toUpperCase()
+  const name =
+    profile?.display_name ||
+    user.user_metadata?.username ||
+    user.email.split('@')[0]
 
-    try {
-      renderTrips(await listMyTrips(), session.user.id)
-    } catch (err) {
-      console.error(err)
-      $('tripsInfo').textContent = 'Could not load your trips.'
-    }
+  // both views (#home and #account) show these, so they are classes, not ids
+  setAll('.acctEmail', user.email)
+  setAll('.displayName', name)
+  setAll('.monogram', Array.from(name)[0].toUpperCase())
 
-    $('logout').addEventListener('click', async e => {
-        e.preventDefault()
-        await supabase.auth.signOut()
-        location.replace('index.html')
-    
-    })
-    
+  $('logout').addEventListener('click', async e => {
+    e.preventDefault()
+    await supabase.auth.signOut()
+    location.replace('index.html')
+  })
+
+  // someone opened an invite link before logging in: join that trip now
+  const claimed = await claimPendingInvite()
+  if (claimed?.tripId) {
+    location.replace(`app.html?id=${encodeURIComponent(claimed.tripId)}`)
+    return
+  }
+  if (claimed?.error) alert('That invite link is invalid or has expired.')
+
+  try {
+    renderTrips(await listMyTrips(), user.id)
+  } catch (err) {
+    console.error(err)
+    $('tripsInfo').textContent = 'Could not load your trips.'
+  }
 }
+
 function renderPage() {
   const showAccount = window.location.hash === '#account'
   $('account').style.display = showAccount ? 'flex' : 'none'
@@ -46,6 +59,8 @@ function renderPage() {
 
 window.addEventListener('hashchange', renderPage)
 renderPage()
+
+// ---------------------------------------------------------------- trip list
 
 async function listMyTrips() {
   const { data, error } = await supabase
@@ -96,35 +111,15 @@ function renderTrips(trips, myId) {
   }
 }
 
-
-function resetInvites() {
-  invitees.length = 0
-  renderChips()
-  inviteInput.value = ''
-  inviteHint.textContent = ''
-}
-
-let createdTripId = null      // lets a retry skip re-creating the trip
-
-$('exit').addEventListener('click', () => $('CreateTripDialog').close())
-
-$('createTrip').addEventListener('click', e => {
-  e.preventDefault()
-  $('createTripForm').reset()
-  resetInvites()
-  $('signUpMsg').textContent = ''
-  createdTripId = null
-  $('NewEndDate').min = ''
-  $('CreateTripDialog').showModal()
-})
+// ------------------------------------------------------- invite email chips
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const MAX_INVITES = 30
 
-const inviteBox = document.getElementById('inviteBox')
-const inviteInput = document.getElementById('inviteInput')
+const inviteBox = $('inviteBox')
+const inviteInput = $('inviteInput')
 const chipsEl = inviteBox.querySelector('.chips')
-const inviteHint = document.getElementById('inviteHint')
+const inviteHint = $('inviteHint')
 
 const invitees = []
 
@@ -133,10 +128,10 @@ function renderChips() {
   for (const email of invitees) {
     const chip = document.createElement('span')
     chip.className = 'chip'
-    chip.append(email)                          
+    chip.append(email)
 
     const x = document.createElement('button')
-    x.type = 'button'                          
+    x.type = 'button'
     x.className = 'chipRemove'
     x.setAttribute('aria-label', `Remove ${email}`)
     x.textContent = '×'
@@ -150,7 +145,6 @@ function renderChips() {
     chipsEl.append(chip)
   }
 }
-
 
 function addInvitees(raw) {
   const bad = []
@@ -200,62 +194,85 @@ export function getInviteEmails() {
   return { emails: [...invitees], hasInvalid: inviteInput.value.trim() !== '' }
 }
 
+function resetInvites() {
+  invitees.length = 0
+  renderChips()
+  inviteInput.value = ''
+  inviteHint.textContent = ''
+}
 
-//-----------------------------------------Submit------------------------------------------//
+// ------------------------------------------------------------ create trip
+
+let createdTripId = null      // lets a retry skip re-creating the trip
+
+$('exit').addEventListener('click', () => $('CreateTripDialog').close())
+
+$('createTrip').addEventListener('click', e => {
+  e.preventDefault()
+  $('createTripForm').reset()
+  resetInvites()
+  $('signUpMsg').textContent = ''
+  createdTripId = null
+  $('NewEndDate').min = ''
+  $('CreateTripDialog').showModal()
+})
 
 $('NewStartDate').addEventListener('change', () => {
-    const start = $('NewStartDate').value
-    $('NewEndDate').min = start
-    if ($('NewEndDate').value && $('NewEndDate').value < start) $('NewEndDate').value = start
+  const start = $('NewStartDate').value
+  $('NewEndDate').min = start
+  if ($('NewEndDate').value && $('NewEndDate').value < start) $('NewEndDate').value = start
 })
 
 $('createTripForm').addEventListener('submit', async e => {
-    e.preventDefault()
-    if (!session) return
+  e.preventDefault()
+  if (!session) return
 
-    const msg = $('signUpMsg')
-    const btn = e.target.querySelector('button[type="submit"]')
-    msg.textContent = ''
+  const msg = $('signUpMsg')
+  const btn = e.target.querySelector('button[type="submit"]')
+  msg.textContent = ''
 
-    const title = $('NewTripTitle').value.trim()
-    const start = $('NewStartDate').value
-    const end = $('NewEndDate').value
+  const title = $('NewTripTitle').value.trim()
+  const start = $('NewStartDate').value
+  const end = $('NewEndDate').value
 
-    if (!title) {
-        msg.textContent = 'Enter Name!'
-        return
+  if (!title) {
+    msg.textContent = 'Enter Name!'
+    return
+  }
+  if (end < start) {
+    msg.textContent = 'The end date must be on or after the start date.'
+    return
+  }
+
+  const { emails, hasInvalid } = getInviteEmails()
+  if (hasInvalid) {
+    msg.textContent = 'Invalid invite email(s).'
+    return
+  }
+
+  const me = session.user.email.toLowerCase()
+  const toInvite = emails.filter(addr => addr !== me)     // no inviting yourself
+
+  btn.disabled = true
+  try {
+    // 1) create the trip (the database also makes you its owner)
+    if (!createdTripId) {
+      const { data: tripId, error } = await supabase.rpc('create_trip', {
+        p_title: title, p_start: start, p_end: end
+      })
+      if (error) throw error
+      createdTripId = tripId
     }
-    if (end < start) {
-        msg.textContent = 'The end date must be on or after the start date.'
-    }
 
-    const { emails, hasInvalid } = getInviteEmails()
-    if (hasInvalid) {
-      msg.textContent = 'Invalid invite email(s).'
-      return
-    }
-
-    const me = session.user.email.toLowerCase()
-    const toInvite = emails.filter(addr => addr !== me)
-
-    btn.disabled = true
-    try {
-      if(!createdTripId) {
-        const { data: tripId, error } = await supabase.rpc('create_trip', {
-          p_title: title, p_start: start, p_end: end
-        })
-        if (error) throw error
-        createdTripId = tripId
-      }
-
-      if (toInvite.length) {
-        const { error: invErr } = await supabase.from('trip_invites').upsert(
+    // 2) save the invites, then 3) email them
+    if (toInvite.length) {
+      const { error: invErr } = await supabase.from('trip_invites').upsert(
         toInvite.map(email => ({ trip_id: createdTripId, email })),
         { onConflict: 'trip_id,email', ignoreDuplicates: true }
       )
       if (invErr) throw invErr
 
-      // 3) email them (the invites are already saved if this step fails)
+      // the invites are already saved if this step fails
       const { error: fnErr } = await supabase.functions.invoke('send-invites', {
         body: { tripId: createdTripId }
       })
@@ -273,3 +290,6 @@ $('createTripForm').addEventListener('submit', async e => {
     btn.disabled = false
   }
 })
+
+// last on purpose: every const above must be initialized before start() runs
+if (session) start(session)

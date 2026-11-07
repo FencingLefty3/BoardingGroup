@@ -210,6 +210,24 @@ input.emailInput {
     --fc-forma-muted-border: #3e4a6026;
     --fc-forma-highlight: #5d54841a;
 }
+.calendarEventContent {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.2;
+}
+.calendarEventTime {
+    font-weight: 600;
+}
+.calendarEventTitle,
+.calendarEventLocation {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.calendarEventLocation {
+    font-size: 0.8em;
+    opacity: 0.8;
+}
 button {
   width: 40%;
   padding:10px 12px;
@@ -233,6 +251,203 @@ button.eventBtn img {
     display: block;
     width: 1.25rem;
     height: 1.25rem;
+}
+.eventLocationRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 90%;
+}
+.eventLocationSearch {
+    position: relative;
+    min-width: 0;
+    flex: 1;
+}
+.eventLocationSearch > input {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    height: 36px;
+    padding: 6px 12px;
+    margin: 6px 0 0;
+    line-height: 20px;
+}
+#flightAirportFields {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+#flightAirportFields[hidden] {
+    display: none;
+}
+#flightAirportFields label {
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+}
+.eventTypePicker {
+    position: relative;
+    margin-top: 6px;
+}
+#eventTypeToggle,
+#eventTypeMenu button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: auto;
+    margin: 0;
+    white-space: nowrap;
+}
+#eventTypeToggle {
+    box-sizing: border-box;
+    height: 36px;
+    padding: 4px 8px;
+}
+#eventTypeToggle img,
+#eventTypeMenu img {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+}
+#eventTypeToggle img {
+    width: 16px;
+    height: 16px;
+}
+#eventTypeMenu {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 0.25rem);
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 100%;
+    padding: 0.35rem;
+    border-radius: 0.5rem;
+    background: var(--primaryColor);
+    box-shadow: #000 1.95px 1.95px 2.6px;
+}
+#eventTypeMenu[hidden] {
+    display: none;
+}
+#eventTypeMenu button {
+    width: 100%;
+    text-align: left;
+}
+#locationResults,
+.airportResults {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+    border-radius: 0.5rem;
+}
+#locationResults[hidden],
+.airportResults[hidden] {
+    display: none;
+}
+.locationResult {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.6rem;
+    text-align: left;
+    border-radius: 0.5rem;
+    background: #f0f0f0;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+}
+.locationResult h3,
+.locationResult p {
+    margin: 0;
+}
+.locationResult:hover,
+.locationResult.is-active,
+.locationResult:focus-visible {
+    background: #8b93a2;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+    padding: 0.6rem;
+    margin: 0;
+    outline: none;
+}
+#newEventForm > label,
+#newEventForm > input,
+#newEventForm > small {
+    width: 90%;
+}
+#newEventForm > input[type="datetime-local"] {
+    box-sizing: border-box;
+    height: 36px;
+    margin-top: 0;
+}
+#eventDetailsForm {
+    width: min(28rem, 80vw);
+}
+#eventDetailsDialog[open] {
+    box-sizing: border-box;
+    width: min(32rem, 90vw);
+    height: auto;
+    max-height: 90svh;
+    overflow-y: auto;
+    padding: 1.25rem;
+}
+#eventDetailsForm > label,
+#eventDetailsForm > input,
+#eventDetailsForm > textarea {
+    box-sizing: border-box;
+    display: block;
+    width: 90%;
+    margin: 0.35rem auto;
+}
+#eventDetailsForm > label {
+    text-align: left;
+}
+#eventDetailsForm > textarea {
+    resize: vertical;
+}
+.newEventActions .deleteEventButton {
+    background: #a83232;
+    color: #fff;
+}
+#newEventForm > small {
+    text-align: center;
+}
+#newEventForm > small a {
+    color: var(--secondaryColor);
+}
+.newEventActions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 90%;
+}
+.newEventActions button {
+    width: auto;
+}
+#newEventDialog[open] {
+    box-sizing: border-box;
+    width: 60vw;
+    height: 90vh;
+    max-height: 90dvh;
+    overflow: hidden;
+    padding: 1.25rem;
+    display: flex;
+    justify-content: flex-start !important;
+}
+#newEventDialog #newEventForm {
+    min-height: 0;
+    justify-content: to-start;
 }
 button#addSuggestion {
     width: unset !important;
@@ -267,6 +482,17 @@ button[type="submit"]:hover {
 input {
   width:80%;
   height: .8rem;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-sizing: content-box;
+  border: #000 2px inset;
+  box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+}
+select {
+    height: .8rem;
   padding:10px 12px;
   margin-top:6px;
   border-radius:8px;
