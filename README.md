@@ -7,7 +7,7 @@ Boarding group is a travel planner for colabration between you and your group (f
 
 ### Where?
 
-Runs in your browser!
+Runs in your [browser!](https://fencinglefty.com/BoardingGroup)
 
 ### Who?
 
