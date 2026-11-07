@@ -30,6 +30,10 @@ To pick back up, load the trip on your account page.
 
 ![app](https://github.com/FencingLefty3/FencingLefty3.github.io/blob/main/assets/Screenshot07.png?raw=true)
 
+## How it was made
+
+Made with Supabase, FullCalendar, Resend, Github pages, javascript, html.
+
 ## Ai use
 
 Some as was used for debuging. Ai was also used for some parts of backend code.
