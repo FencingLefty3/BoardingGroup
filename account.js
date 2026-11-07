@@ -277,8 +277,10 @@ $('createTripForm').addEventListener('submit', async e => {
         body: { tripId: createdTripId }
       })
       if (fnErr) {
-        console.error(fnErr)
-        alert('Your trip was created, but the invite emails could not be sent. You can resend them later.')
+        let detail = null
+        try { detail = await fnErr.context.json() } catch {}      // the body the function (or Supabase) sent back
+        console.error(fnErr.name, fnErr.message, detail)
+        alert(`Your trip was created, but the invite emails could not be sent.\n\n${detail?.error ?? detail?.message ?? fnErr.message}`)
       }
     }
 

@@ -55,6 +55,8 @@ $('createEvent').addEventListener('click', e => {
   $('newEventMessage').textContent = ''
   $('newEventDialog').showModal()
 })
+$('leftCal').addEventListener('click', () => calendar?.prev())
+$('rightCal').addEventListener('click', () => calendar?.next())
 
 const eventTypeToggle = $('eventTypeToggle')
 const eventTypeMenu = $('eventTypeMenu')
@@ -130,7 +132,6 @@ $('editTripForm').addEventListener('submit', async e => {
       .single()
 
     if (error) throw error
-
     currentTrip = data
     $('tripTitle').textContent = data.title
     $('editTripDialog').close()
@@ -139,6 +140,35 @@ $('editTripForm').addEventListener('submit', async e => {
     message.textContent = `Could not update trip: ${error.message}`
   } finally {
     submitButton.disabled = false
+  }
+})
+
+$('deleteTripButton').addEventListener('click', async () => {
+  if (!tripId || !currentTrip) return
+  if (!window.confirm(`Permanently delete "${currentTrip.title}"? This cannot be undone.`)) return
+
+  const button = $('deleteTripButton')
+  const message = $('editTripMessage')
+  const formButtons = $('editTripForm').querySelectorAll('button')
+  formButtons.forEach(formButton => { formButton.disabled = true })
+  message.textContent = ''
+
+  try {
+    const { count, error } = await supabase
+      .from('trips')
+      .delete({ count: 'exact' })
+      .eq('id', tripId)
+
+    if (error) throw error
+    if (count !== 1) {
+      throw new Error('No trip was deleted. Check the trips DELETE permission and row-level security policy for trip owners.')
+    }
+
+    location.replace('account.html')
+  } catch (error) {
+    console.error('Could not delete trip:', error)
+    message.textContent = `Could not delete trip: ${error.message}`
+    formButtons.forEach(formButton => { formButton.disabled = false })
   }
 })
 
@@ -189,11 +219,39 @@ async function loadTripTitle() {
     $('tripTitle').textContent = data.title
     $('eventDateTime').min = `${data.start_date}T00:00`
     $('eventDateTime').max = `${data.end_date}T23:59`
+    await loadTripDeletePermission()
     await loadTripEvents()
   } catch (error) {
     console.error('Could not load trip title:', error)
     $('editButton').hidden = true
   }
+}
+
+async function loadTripDeletePermission() {
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+  if (userError) {
+    console.error('Could not check trip ownership:', userError)
+    $('deleteTripButton').hidden = true
+    return
+  }
+  if (!user) {
+    $('deleteTripButton').hidden = true
+    return
+  }
+
+  const { data, error } = await supabase
+    .from('trip_members')
+    .select('role')
+    .eq('trip_id', tripId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Could not check trip ownership:', error)
+    $('deleteTripButton').hidden = true
+    return
+  }
+  $('deleteTripButton').hidden = data?.role !== 'owner'
 }
 
 function getEventLocation(notes, title) {

@@ -35,7 +35,13 @@
         <button id="addSuggestion"><img src="plus.png"></button>
     </div>
     <p style="width: fit-content;opacity: .5;font-size: .8rem;margin: 0;">Schedule</p>
-    <div style="width: 85%; display: flex;flex-direction: row;align-items: center;justify-content: space-between;margin-bottom: calc((-1 * 2rem) + 0.4rem);"><div><button style="margin: 0;" class="eventBtn" id="leftCal"><img src="circle-chevron.png"></button><button style="margin: 0;" class="eventBtn" id="rightCal"><img style="transform: rotate(180deg);" src="circle-chevron.png"></button></div> <button style="margin: 0;" class="eventBtn" id="createEvent">Event <img src="plus.png"></button></div>
+    <div id="calendarNavigation">
+        <div class="calendarStepButtons">
+            <button type="button" class="eventBtn" id="leftCal" aria-label="Previous calendar period"><img src="circle-chevron.png" alt=""></button>
+            <button type="button" class="eventBtn" id="rightCal" aria-label="Next calendar period"><img class="nextCalendarIcon" src="circle-chevron.png" alt=""></button>
+        </div>
+        <button type="button" class="eventBtn" id="createEvent">Event <img src="plus.png" alt=""></button>
+    </div>
 
     <div id="calendar"></div>
     <p id="calendarMessage" role="status" aria-live="polite"></p>
@@ -86,7 +92,10 @@
             </div></div>
 
             <p id="editTripMessage" role="status" aria-live="polite"></p>
-            <button style="margin-top: 1.2rem;" type="submit">Done</button>
+            <div class="editTripActions">
+                <button id="deleteTripButton" type="button" class="deleteTripButton" hidden>Delete Trip</button>
+                <button type="submit">Done</button>
+            </div>
         </form>
     </dialog>
     <dialog id="newEventDialog">
