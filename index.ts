@@ -25,6 +25,47 @@ const HTML_ESCAPES: Record<string, string> = {
 }
 const esc = (s: string) => s.replace(/[&<>"']/g, c => HTML_ESCAPES[c])
 
+function inviteEmailHtml(tripTitle: string, inviteUrl: string) {
+  const background = '#c2c2c2'
+  const foreground = '#3e4a60'
+  const accent = '#5d5484'
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <style>:root { color-scheme: light only; supported-color-schemes: light; }</style>
+</head>
+<body style="margin:0;padding:0;background-color:${background};color:${foreground};font-family:'Lucida Console','Courier New',monospace;">
+  <table class="emailBackground" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${background}" style="width:100%;background-color:${background};">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table class="emailCard" role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="${background}" style="width:100%;max-width:600px;background-color:${background};color:${foreground};">
+          <tr>
+            <td style="padding:24px;">
+              <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:24px;color:${foreground};">Boarding Group</h1>
+              <p style="margin:20px 0;color:${foreground};">
+                You've been invited to <strong>${esc(tripTitle)}</strong> on Boarding Party.
+              </p>
+              <p style="margin:24px 0;">
+                <a class="emailButton" href="${inviteUrl}" style="display:inline-block;padding:12px 16px;border-radius:8px;background-color:${accent};color:${background};font-family:'Lucida Console','Courier New',monospace;text-decoration:none;">Join the trip</a>
+              </p>
+              <p style="margin:0;color:${foreground};opacity:.7;font-size:13px;">
+                No account yet? You'll be asked to create one first.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+}
+
 deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
@@ -72,67 +113,7 @@ deno.serve(async (req) => {
         from: deno.env.get('FROM_EMAIL'),
         to: invite.email,
         subject: `You're invited to ${tripTitle}`,
-        html: `<div style="
-    background: #c2c2c2;
-    color: #3e4a60;
-    padding: 20px;
-    font-family: 'Lucida Console', 'Courier New', monospace;
-">
-
-    <div style="
-        color: #3e4a60;
-        padding: 20px;
-    ">
-
-        <h2 style="
-            font-family: 'Lato', Helvetica, Arial, sans-serif;
-            margin: 0 0 20px;
-            font-size: 1.5rem;
-        ">
-            Boarding Group
-        </h2>
-
-        <hr style="
-            opacity: .5;
-            margin-top: 0;
-            width: 100%;
-        ">
-
-        <p style="
-            opacity: .8;
-            font-size: .8rem;
-            margin-bottom: 16px;
-        ">
-            You've been invited to
-            <b>${esc(tripTitle)}</b>
-            on Boarding Party.
-        </p>
-
-        <a href="${link}" style="
-            display: inline-block;
-            background: #5d5484;
-            color: #c2c2c2;
-            font-family: 'Lucida Console', 'Courier New', monospace;
-            text-decoration: none;
-            padding: 10px 12px;
-            border-radius: 8px;
-            box-shadow: #000 1.95px 1.95px 2.6px;
-            margin-bottom: 6px;
-        ">
-            Join the trip →
-        </a>
-
-        <p style="
-            opacity: .5;
-            font-size: .8rem;
-            margin: 0;
-        ">
-            No account yet? You'll be asked to create one first.
-        </p>
-
-    </div>
-
-</div>`,
+        html: inviteEmailHtml(tripTitle, link),
       }),
     })
 

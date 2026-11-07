@@ -180,31 +180,83 @@ $('deleteTripButton').addEventListener('click', async () => {
   }
 })
 
-$('createSuggestionForm').addEventListener('submit', e => {
+$('createSuggestionForm').addEventListener('submit', async e => {
   e.preventDefault()
+
+  if (!tripId || !currentTrip) {
+    $('signUpMsg').textContent = 'Select a trip before adding a suggestion.'
+    return
+  }
 
   const title = $('NewSuggestionTitle').value.trim()
   const comment = $('commentInput').value.trim()
   if (!title) return
 
+  const form = e.currentTarget
+  const submitButton = form.querySelector('button[type="submit"]')
+  submitButton.disabled = true
+  $('signUpMsg').textContent = ''
+
+  try {
+    const color = suggestionColors[Math.floor(Math.random() * suggestionColors.length)]
+    const { data, error } = await supabase
+      .from('trip_suggestions')
+      .insert({ trip_id: tripId, title, comment, color })
+      .select('id, title, comment, color')
+      .single()
+
+    if (error) throw error
+
+    renderSuggestion(data)
+    form.reset()
+    $('SuggestionDialog').close()
+  } catch (error) {
+    console.error('Could not save suggestion:', error)
+    $('signUpMsg').textContent = `Could not save suggestion: ${error.message}`
+  } finally {
+    submitButton.disabled = false
+  }
+})
+
+function renderSuggestion(suggestion) {
   const card = document.createElement('article')
   card.className = 'suggestionCard'
-  card.style.backgroundColor = suggestionColors[Math.floor(Math.random() * suggestionColors.length)]
+  card.style.backgroundColor = suggestionColors.includes(suggestion.color)
+    ? suggestion.color
+    : suggestionColors[0]
 
   const heading = document.createElement('h3')
-  heading.textContent = title
+  heading.textContent = suggestion.title
   card.append(heading)
 
-  if (comment) {
+  if (suggestion.comment) {
     const description = document.createElement('p')
-    description.textContent = comment
+    description.textContent = suggestion.comment
     card.append(description)
   }
 
   $('suggestionBoard').append(card)
-  $('createSuggestionForm').reset()
-  $('SuggestionDialog').close()
-})
+}
+
+async function loadTripSuggestions() {
+  $('suggestionMessage').textContent = ''
+  $('suggestionBoard').replaceChildren()
+  if (!tripId) return
+
+  try {
+    const { data, error } = await supabase
+      .from('trip_suggestions')
+      .select('id, title, comment, color')
+      .eq('trip_id', tripId)
+      .order('created_at', { ascending: true })
+
+    if (error) throw error
+    data.forEach(renderSuggestion)
+  } catch (error) {
+    console.error('Could not load suggestions:', error)
+    $('suggestionMessage').textContent = `Could not load suggestions: ${error.message}`
+  }
+}
 
 const tripId = new URLSearchParams(window.location.search).get('id')
 let currentTrip = null
@@ -229,6 +281,7 @@ async function loadTripTitle() {
     $('eventDateTime').min = `${data.start_date}T00:00`
     $('eventDateTime').max = `${data.end_date}T23:59`
     await loadTripDeletePermission()
+    await loadTripSuggestions()
     await loadTripEvents()
   } catch (error) {
     console.error('Could not load trip title:', error)

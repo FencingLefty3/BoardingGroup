@@ -25,6 +25,47 @@ function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, character => htmlEscapes[character])
 }
 
+function inviteEmailHtml(tripTitle: string, inviteUrl: string) {
+  const background = '#c2c2c2'
+  const foreground = '#3e4a60'
+  const accent = '#5d5484'
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <style>:root { color-scheme: light only; supported-color-schemes: light; }</style>
+</head>
+<body style="margin:0;padding:0;background-color:${background};color:${foreground};font-family:'Lucida Console','Courier New',monospace;">
+  <table class="emailBackground" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${background}" style="width:100%;background-color:${background};">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table class="emailCard" role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="${background}" style="width:100%;max-width:600px;background-color:${background};color:${foreground};">
+          <tr>
+            <td style="padding:24px;">
+              <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:24px;color:${foreground};">Boarding Group</h1>
+              <p style="margin:20px 0;color:${foreground};">
+                You've been invited to <strong>${escapeHtml(tripTitle)}</strong> on Boarding Party.
+              </p>
+              <p style="margin:24px 0;">
+                <a class="emailButton" href="${inviteUrl}" style="display:inline-block;padding:12px 16px;border-radius:8px;background-color:${accent};color:${background};font-family:'Lucida Console','Courier New',monospace;text-decoration:none;">Join the trip</a>
+              </p>
+              <p style="margin:0;color:${foreground};opacity:.7;font-size:13px;">
+                No account yet? You'll be asked to create one first.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+}
+
 Deno.serve(async request => {
   if (request.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -99,9 +140,7 @@ Deno.serve(async request => {
           from: fromEmail,
           to: invite.email,
           subject: `You're invited to ${tripTitle}`,
-          html: `<p>You've been invited to <b>${escapeHtml(tripTitle)}</b> on Boarding Party.</p>
-                 <p><a href="${inviteUrl}">Join the trip</a></p>
-                 <p>No account yet? You'll be asked to create one first.</p>`,
+          html: inviteEmailHtml(tripTitle, inviteUrl),
         }),
       })
     } catch (error) {
