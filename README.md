@@ -1,4 +1,5 @@
-# Boarding Group
+![img](favicon.png)
+# Boarding Group  
 
 ### What?
 
@@ -24,3 +25,7 @@ You can change trip details, and share with people to collabarate in the trip ed
 ### Continue
 
 To pick back up, load the trip on your account page.
+
+## Screenshots
+
+![app](https://github.com/FencingLefty3/FencingLefty3.github.io/blob/main/assets/Screenshot07.png?raw=true)
