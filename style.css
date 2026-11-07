@@ -45,3 +45,53 @@ body {
     width: 100svw;
     height: 100svh;
 }
+.box {
+    background: var(--secondaryColor);
+    color: var(--primaryColor);
+    margin: 0;
+    border-radius: 1rem;
+    box-shadow: #000 1.95px 1.95px 2.6px;
+
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 80%;
+}
+main {
+    background: var(--primaryColor);
+    color: var(--secondaryColor);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
+
+    width: 100%;            /* Safer than 100svw as it accounts for scrollbars */
+    padding: 0 20px;   
+    margin: 0;
+    padding: 10px;
+    height: 100dvh;
+    max-height: 100%;
+}
+button {
+      width:40%;
+    position: relative;
+    left: 50%;
+  transform: translate(-50%, 0);
+  padding:10px 12px;
+  color: var(--secondaryColor);
+  margin-top:6px;
+  border-radius:8px;
+  outline: none;
+  box-shadow: #000 1.95px 1.95px 2.6px;
+  font-size:1rem;
+}
+button:hover {
+  width:40%;
+  padding:10px 12px;
+  margin-top:6px;
+  border-radius:8px;
+  box-shadow: var(--primaryColor) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  font-size:1rem;
+}

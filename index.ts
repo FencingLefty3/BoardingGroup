@@ -24,11 +24,13 @@ const HTML_ESCAPES: Record<string, string> = {
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }
 const esc = (s: string) => s.replace(/[&<>"']/g, c => HTML_ESCAPES[c])
+const SITE_URL = 'https://fencinglefty.com/BoardingGroup'
 
-function inviteEmailHtml(tripTitle: string, inviteUrl: string) {
+function inviteEmailHtml(tripTitle: string, inviteUrl: string, siteUrl: string) {
   const background = '#c2c2c2'
   const foreground = '#3e4a60'
   const accent = '#5d5484'
+  const year = new Date().getFullYear()
 
   return `<!doctype html>
 <html lang="en">
@@ -47,8 +49,9 @@ function inviteEmailHtml(tripTitle: string, inviteUrl: string) {
           <tr>
             <td style="padding:24px;">
               <h1 style="margin:0 0 20px;font-family:Helvetica,Arial,sans-serif;font-size:24px;color:${foreground};">Boarding Group</h1>
+              <hr style="border:0;border-top:1px solid ${foreground};opacity:.35;">
               <p style="margin:20px 0;color:${foreground};">
-                You've been invited to <strong>${esc(tripTitle)}</strong> on Boarding Party.
+                You've been invited to <strong>${esc(tripTitle)}</strong> on Boarding Group.
               </p>
               <p style="margin:24px 0;">
                 <a class="emailButton" href="${inviteUrl}" style="display:inline-block;padding:12px 16px;border-radius:8px;background-color:${accent};color:${background};font-family:'Lucida Console','Courier New',monospace;text-decoration:none;">Join the trip</a>
@@ -56,6 +59,13 @@ function inviteEmailHtml(tripTitle: string, inviteUrl: string) {
               <p style="margin:0;color:${foreground};opacity:.7;font-size:13px;">
                 No account yet? You'll be asked to create one first.
               </p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:0 24px 24px;color:${foreground};font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;">
+              <p style="margin:0;">Boarding Group by FencingLefty</p>
+              <p style="margin:0;">&copy; ${year} FencingLefty. All rights reserved.</p>
+              <p style="margin:0;"><a href="${siteUrl}" style="color:${foreground};">Visit Boarding Group</a></p>
             </td>
           </tr>
         </table>
@@ -70,7 +80,7 @@ deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   // fail loudly when a secret is missing, instead of sending broken emails
-  const missing = ['RESEND_API_KEY', 'SITE_URL', 'FROM_EMAIL'].filter(name => !deno.env.get(name))
+  const missing = ['RESEND_API_KEY', 'FROM_EMAIL'].filter(name => !deno.env.get(name))
   if (missing.length) return json({ error: `Missing secrets: ${missing.join(', ')}` }, 500)
 
   const authHeader = req.headers.get('Authorization')
@@ -94,7 +104,7 @@ deno.serve(async (req) => {
     .is('emailed_at', null)
   if (error) return json({ error: error.message }, 400)
 
-  const siteUrl = deno.env.get('SITE_URL')!.replace(/\/$/, '')
+  const siteUrl = SITE_URL
   const sent: string[] = []
   const failed: { email: string; reason: string }[] = []
 
@@ -113,7 +123,7 @@ deno.serve(async (req) => {
         from: deno.env.get('FROM_EMAIL'),
         to: invite.email,
         subject: `You're invited to ${tripTitle}`,
-        html: inviteEmailHtml(tripTitle, link),
+        html: inviteEmailHtml(tripTitle, link, siteUrl),
       }),
     })
 
